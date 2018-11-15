@@ -1,29 +1,25 @@
 <?php
 
-namespace App\Entity\AbstractEntity;
+namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
 abstract class AbstractEntity
 {
     /**
-     * @ORM\Column(type="integer")
      * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
+
     /**
-     * @var datetime $created
-     *
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(name="created_at", type="datetime")
      */
     protected $createdAt;
 
     /**
-     * @var datetime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
      * @ORM\Column(name="updated_at", type="datetime")
      */
     protected $updatedAt;

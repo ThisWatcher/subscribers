@@ -17,8 +17,6 @@ class AppFixtures extends Fixture
             $subscriber->setEmail(substr(md5(microtime()),rand(0,26),5) . '@' . substr(md5(microtime()),rand(0,26),5) . '.' . substr(md5(microtime()),rand(0,26),5));
             $subscriber->setName(substr(md5(microtime()),rand(0,26),5));
             $subscriber->setState(Entity\Subscriber::$statusList[rand ( 0, count(Entity\Subscriber::$statusList) - 1 )]);
-            $subscriber->setCreatedAt(new DateTime());
-            $subscriber->setUpdatedAt(new DateTime());
             $manager->persist($subscriber);
         }
 

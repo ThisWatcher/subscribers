@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *      @ORM\Index(name="email_idx", columns={"email"}),
  * },
  * options={"collate"="utf8_lithuanian_ci"})
+ * @ORM\HasLifecycleCallbacks
  */
 class Subscriber extends AbstractEntity
 {
@@ -99,6 +100,5 @@ class Subscriber extends AbstractEntity
         $this->state = $state;
         return $this;
     }
-
 
 }

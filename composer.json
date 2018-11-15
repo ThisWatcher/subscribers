@@ -31,7 +31,8 @@
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": "3.4.*",
         "twig/twig": "^1.0||^2.0",
-        "doctrine/doctrine-migrations-bundle": "~1.2.1"
+        "doctrine/doctrine-migrations-bundle": "~1.2.1",
+        "doctrine/doctrine-fixtures-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

@@ -37,4 +37,60 @@ class Subscriber extends AbstractEntity
      * @ORM\Column(name="state", type="string", length=255)
      */
     protected $state;
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     * @return Subscriber
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Subscriber
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $state
+     * @return Subscriber
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+        return $this;
+    }
+
+
 }

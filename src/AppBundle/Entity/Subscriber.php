@@ -20,6 +20,14 @@ class Subscriber extends AbstractEntity
     const STATUS_UNSUBSCRIBED = 'UNSUBSCRIBED';
     const STATUS_BOUNCED = 'BOUNCED';
 
+    public static $statusList = array(
+        self::STATUS_UNCONFIRMED,
+        self::STATUS_JUNK,
+        self::STATUS_ACTIVE,
+        self::STATUS_UNSUBSCRIBED,
+        self::STATUS_BOUNCED,
+    );
+
     /**
      * @var string
      * @ORM\Column(name="email", type="string", length=255)
@@ -28,7 +36,7 @@ class Subscriber extends AbstractEntity
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     protected $name;
 

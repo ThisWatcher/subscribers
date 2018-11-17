@@ -29,23 +29,24 @@ class SubscriberFixtures extends Fixture
 
         $type = Entity\Field::$typeList[rand(0, count(Entity\Field::$typeList) - 1)];
         $field->setType($type);
+        $field->setTitle(substr(md5(microtime()), rand(0, 26), 15));
 
         switch ($type) {
             case Entity\Field::TYPE_DATE:
                 $timestamp = mt_rand(1, time());
                 $randomDate = date("Y-m-d H:i:s", $timestamp);
-                $field->setTitle($randomDate);
+                $field->setValue($randomDate);
                 break;
             case Entity\Field::TYPE_NUMBER:
                 $randomNumber = rand();
-                $field->setTitle($randomNumber);
+                $field->setValue($randomNumber);
                 break;
             case Entity\Field::TYPE_STRING:
                 $randomString = substr(md5(microtime()), rand(0, 26), 15);
-                $field->setTitle($randomString);
+                $field->setValue($randomString);
                 break;
             case Entity\Field::TYPE_BOOLEAN:
-                $field->setTitle(rand(0, 1));
+                $field->setValue(rand(0, 1));
                 break;
         }
 

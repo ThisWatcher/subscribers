@@ -38,6 +38,12 @@ class Field extends AbstractEntity
     protected $type;
 
     /**
+     * @var string
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    protected $value;
+
+    /**
      * @return string
      */
     public function getTitle()
@@ -70,6 +76,24 @@ class Field extends AbstractEntity
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param string $value
+     * @return Field
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
         return $this;
     }
 

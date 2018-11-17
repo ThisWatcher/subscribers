@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -46,6 +47,22 @@ class Subscriber extends AbstractEntity
      * @ORM\Column(name="state", type="string", length=255)
      */
     protected $state;
+
+    /**
+     * @var Collection|Field[]
+     * @ORM\ManyToMany(targetEntity="Field")
+     */
+    protected $fields;
+
+    public function __construct()
+    {
+        $this->fields = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return (string) $this->getEmail();
+    }
 
     /**
      * @return string
@@ -101,4 +118,22 @@ class Subscriber extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return Collection|Field[]|ArrayCollection
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+
+    /**
+     * @param Field $field
+     * @return $this
+     */
+    public function addField(Field $field)
+    {
+        $this->fields[] = $field;
+
+        return $this;
+    }
 }

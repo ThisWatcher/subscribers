@@ -135,8 +135,9 @@ class Subscriber extends AbstractEntity
         return $this;
     }
 
+
     /**
-     * @return Collection|Field[]|ArrayCollection
+     * @return Collection|fields[]|ArrayCollection
      */
     public function getFields()
     {

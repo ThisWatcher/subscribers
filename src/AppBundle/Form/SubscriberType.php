@@ -22,9 +22,9 @@ class SubscriberType extends AbstractType
             ->add('fields', CollectionType::class, [
             'entry_type' => FieldType::class,
             'by_reference' => false,
-            'entry_options' => array('label' => false),
-            'allow_add' => true,
-            'allow_delete' => true,]);
+           // 'entry_options' => array('label' => false),
+            'allow_add' => true,]
+            );
     }
 
     /**

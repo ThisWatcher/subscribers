@@ -2,7 +2,7 @@
 
 namespace AppBundle\DataFixtures;
 
-use Appbundle\Entity;
+use AppBundle\Entity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -16,8 +16,9 @@ class SubscriberFixtures extends Fixture
             $subscriber->setEmail(substr(md5(microtime()),rand(0,26),5) . '@' . substr(md5(microtime()),rand(0,26),5) . '.' . substr(md5(microtime()),rand(0,26),5));
             $subscriber->setName(substr(md5(microtime()),rand(0,26),5));
             $subscriber->setState(Entity\Subscriber::$statusList[rand ( 0, count(Entity\Subscriber::$statusList) - 1 )]);
-            $subscriber = $this->addRandomFieldToSubscriber($subscriber, $manager);
             $manager->persist($subscriber);
+
+            $this->addRandomFieldToSubscriber($subscriber, $manager);
         }
 
         $manager->flush();
@@ -29,6 +30,7 @@ class SubscriberFixtures extends Fixture
 
         $type = Entity\Field::$typeList[rand(0, count(Entity\Field::$typeList) - 1)];
         $field->setType($type);
+        $field->setSubscriber($subscriber);
         $field->setTitle(substr(md5(microtime()), rand(0, 26), 15));
 
         switch ($type) {
@@ -52,6 +54,6 @@ class SubscriberFixtures extends Fixture
 
         $manager->persist($field);
 
-        return $subscriber->addField($field);
+        return $field;
     }
 }

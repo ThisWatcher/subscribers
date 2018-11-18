@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -22,6 +24,9 @@ class Subscriber extends AbstractEntity
     const STATUS_UNSUBSCRIBED = 'UNSUBSCRIBED';
     const STATUS_BOUNCED = 'BOUNCED';
 
+    /**
+     * @JMS\Exclude();
+     */
     public static $statusList = array(
         self::STATUS_UNCONFIRMED,
         self::STATUS_JUNK,
@@ -33,6 +38,10 @@ class Subscriber extends AbstractEntity
     /**
      * @var string
      * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     protected $email;
 
@@ -46,11 +55,11 @@ class Subscriber extends AbstractEntity
      * @var string
      * @ORM\Column(name="state", type="string", length=255)
      */
-    protected $state;
+    protected $state = self::STATUS_UNCONFIRMED;
 
     /**
-     * @var Collection|Field[]
-     * @ORM\ManyToMany(targetEntity="Field")
+     * @var Collection|fields[]
+     * @ORM\OneToMany(targetEntity="Field", mappedBy="subscriber", cascade={"persist"})
      */
     protected $fields;
 
@@ -132,8 +141,15 @@ class Subscriber extends AbstractEntity
      */
     public function addField(Field $field)
     {
-        $this->fields[] = $field;
-
+        $this->getFields()->add($field);
+        $field->setSubscriber($this);
         return $this;
     }
+
+    public function removeField(Field $field)
+    {
+        $this->fields->removeElement($field);
+        return $this;
+    }
+
 }

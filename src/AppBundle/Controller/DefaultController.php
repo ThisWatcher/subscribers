@@ -4,22 +4,17 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use AppBundle\Entity;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class DefaultController extends Controller
 {
-    /**
-     * @Route("/", name="homepage")
-     */
-    public function indexAction(Request $request, ObjectManager $manager)
+    public function indexAction(Request $request)
     {
+        dump($request);
         $repo =$this->getDoctrine()->getManager()->getRepository('AppBundle:Subscriber');
 
 
 // this returns a single item
-        $found = $repo->find(259)->getFields()[0];
+        $found = $repo->find(1)->getFields()[0];
         dump($found);
         die();
         return $this->render('default/index.html.twig', [

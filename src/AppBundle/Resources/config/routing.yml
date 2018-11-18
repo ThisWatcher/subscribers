@@ -1,0 +1,29 @@
+subscriber_index:
+    path:     /
+    defaults: { _controller: AppBundle:Default:index }
+
+subscriber_post:
+    path:     /subscriber
+    defaults: { _controller: AppBundle:Subscriber:post }
+    methods:    [POST]
+
+subscriber_get:
+    path:     /subscriber/{id}
+    defaults: { _controller: AppBundle:Subscriber:get }
+    methods:    [GET]
+
+subscriber_put:
+    path:     /subscriber/{id}
+    defaults: { _controller: AppBundle:Subscriber:put }
+    methods:    [PUT]
+
+subscriber_delete:
+    path:     /subscriber/{id}
+    defaults: { _controller: AppBundle:Subscriber:delete }
+    methods:    [DELETE]
+
+
+
+subscriber_test:
+    path:     /test
+    defaults: { _controller: AppBundle:Subscriber:test }

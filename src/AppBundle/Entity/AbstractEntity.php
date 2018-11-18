@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 abstract class AbstractEntity
 {
@@ -13,14 +14,15 @@ abstract class AbstractEntity
      */
     protected $id;
 
-
     /**
      * @ORM\Column(name="created_at", type="datetime")
+     * @JMS\Exclude();
      */
     protected $createdAt;
 
     /**
      * @ORM\Column(name="updated_at", type="datetime")
+     * @JMS\Exclude();
      */
     protected $updatedAt;
 
@@ -79,7 +81,6 @@ abstract class AbstractEntity
     }
 
     /**
-     *
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */

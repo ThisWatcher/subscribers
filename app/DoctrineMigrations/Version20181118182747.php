@@ -8,7 +8,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20181118153643 extends AbstractMigration
+final class Version20181118182747 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
@@ -16,8 +16,8 @@ final class Version20181118153643 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('CREATE TABLE field (id INT AUTO_INCREMENT NOT NULL, subscriber_id INT DEFAULT NULL, title VARCHAR(255) NOT NULL, type VARCHAR(255) DEFAULT NULL, value VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_5BF545587808B1AD (subscriber_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE utf8_lithuanian_ci ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE `subscriber` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(255) NOT NULL, name VARCHAR(255) DEFAULT NULL, state VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX email_idx (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE utf8_lithuanian_ci ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE field ADD CONSTRAINT FK_5BF545587808B1AD FOREIGN KEY (subscriber_id) REFERENCES `subscriber` (id)');
+        $this->addSql('CREATE TABLE `subscriber` (id INT AUTO_INCREMENT NOT NULL, email VARCHAR(255) NOT NULL, name VARCHAR(255) DEFAULT NULL, state VARCHAR(255) NOT NULL, deleted_at DATETIME DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX email_idx (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE utf8_lithuanian_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE field ADD CONSTRAINT FK_5BF545587808B1AD FOREIGN KEY (subscriber_id) REFERENCES `subscriber` (id) ON DELETE CASCADE');
     }
 
     public function down(Schema $schema) : void

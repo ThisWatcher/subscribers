@@ -18,6 +18,7 @@ class SubscriberType extends AbstractType
         $builder
             ->add('name')
             ->add('email')
+            ->add('state')
             ->add('fields', CollectionType::class, [
             'entry_type' => FieldType::class,
             'by_reference' => false,
@@ -34,6 +35,7 @@ class SubscriberType extends AbstractType
             [
                 'data_class' => Entity\Subscriber::class,
                 'csrf_protection' => false,
+                'allow_extra_fields' => true,
             ]
         );
     }

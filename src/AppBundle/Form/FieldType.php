@@ -28,6 +28,7 @@ class FieldType extends AbstractType
             [
                 'data_class' => Entity\Field::class,
                 'csrf_protection' => false,
+                'allow_extra_fields' => true,
             ]
         );
     }

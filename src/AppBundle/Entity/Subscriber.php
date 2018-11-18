@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * },
  * options={"collate"="utf8_lithuanian_ci"})
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
 class Subscriber extends AbstractEntity
 {
@@ -56,6 +58,12 @@ class Subscriber extends AbstractEntity
      * @ORM\Column(name="state", type="string", length=255)
      */
     protected $state = self::STATUS_UNCONFIRMED;
+
+    /**
+     * @var \DateTime $deletedAt
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     /**
      * @var Collection|fields[]

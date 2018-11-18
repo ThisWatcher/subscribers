@@ -15,15 +15,17 @@ class SubscriberController extends Controller
     public function testAction(Request $request)
     {
         $request = new Request();
-        $request->setMethod($request::METHOD_POST);
-        $request->request->set('email', 'test2@test.com');
-
+        $request->setMethod($request::METHOD_DELETE);
+        $request->request->set('id', '85');
+        $request->request->set('email', 'mdsada@sadam.com');
+        //$request->request->set('name', 'martin');
         $data['title'] = 'john';
         $data['value'] = '1999-09-09';
         $request->request->set('fields', [$data]);
 
-        $response = $this->forward('AppBundle\Controller\SubscriberController::postAction', array(
+        $response = $this->forward('AppBundle\Controller\SubscriberController::deleteAction', array(
             'request' => $request,
+            'id' => 1,
         ));
         return $response;
         die();
@@ -46,8 +48,9 @@ die('xd');
 
     public function getAction(Request $request, $id)
     {
-        $repo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Subscriber');
-        $subscriber = $repo->find($id);
+
+        $repository = $this->getDoctrine()->getManager()->getRepository(Entity\Subscriber::class);
+        $subscriber = $repository->find($id);
 
         if (!$subscriber) {
             return new JsonResponse(['error' => 'subscriber ' . $id .' not found'], JsonResponse::HTTP_NOT_FOUND, []);
@@ -61,22 +64,39 @@ die('xd');
 
     public function putAction(Request $request, $id)
     {
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        $repository = $this->getDoctrine()->getManager()->getRepository(Entity\Subscriber::class);
+        $subscriber = $repository->find($id);
+
+        if (!$subscriber) {
+            return new JsonResponse(['error' => 'subscriber ' . $id .' not found'], JsonResponse::HTTP_NOT_FOUND, []);
+        }
+
+        $this->processForm($subscriber, $request->request->all(), 'PUT');
+
+        return new JsonResponse(['user updated succesfully'], JsonResponse::HTTP_OK, [], true);
     }
 
     public function deleteAction(Request $request, $id)
     {
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
-        ]);
+        $repository = $this->getDoctrine()->getManager()->getRepository(Entity\Subscriber::class);
+        $subscriber = $repository->find($id);
+
+        if (!$subscriber) {
+            return new JsonResponse(['error' => 'subscriber ' . $id .' not found'], JsonResponse::HTTP_NOT_FOUND, []);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($subscriber);
+        $em->flush();
+
+        return new JsonResponse(['user updated succesfully'], JsonResponse::HTTP_OK, [], true);
     }
 
     private function processForm(Entity\Subscriber $subscriber, array $parameters, $method = 'PUT') {
 
         $form = $this->createForm(Form\SubscriberType::class, $subscriber, ['method' => $method]);
-        $form->submit($parameters);
+
+        $form->submit($parameters, 'PUT' !== $method);
 
         if ($form->isValid()) {
             $subscriber = $form->getData();

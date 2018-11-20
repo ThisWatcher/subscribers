@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -57,6 +59,14 @@ class Field extends AbstractEntity
     public function __toString()
     {
         return (string) $this->getType() . ' - ' . $this->getValue();
+    }
+
+    public function __clone()
+    {
+        $this->id = null;
+        $this->createdAt = null;
+        $this->updatedAt = null;
+        $this->type = null;
     }
 
     /**
@@ -137,7 +147,6 @@ class Field extends AbstractEntity
      */
     public function preUpdate()
     {
-
         if ($this->checkIfStringIsDate($this->getValue())) {
             $this->setType(self::TYPE_DATE);
         } elseif ($this->checkIfStringIsBool($this->getValue())) {

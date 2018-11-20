@@ -7,26 +7,37 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity;
 use AppBundle\Form;
 use AppBundle\Exception;
 use AppBundle\Exception\BadRequestException;
 use AppBundle\Exception\NotFoundException;
+use Doctrine\Common\Collections\Criteria;
 
 class SubscriberController extends Controller
 {
     public function testAction(Request $request)
     {
-        throw new BadRequestException(['1',2]);
-        throw new NotFoundException('Order you are looking for cannot be found.');
+//        $client = new \GuzzleHttp\Client([
+//            'base_uri' => 'http://myproject.local',
+//            'http_errors' => false,
+//        ]);
+//        $response = $client->get('/subscriber/2');
+//        dump($response);
+//        die();
+//
+//        return new Response('Lets do this!');
+//
+//        throw new BadRequestException(['1',2]);
+//        throw new NotFoundException('Order you are looking for cannot be found.');
         $request = new Request();
         $request->setMethod($request::METHOD_POST);
 
         $request->request->set('email', 'mdsada@sadam.com');
-        //$request->request->set('name', 'martin');
-        $data = ['xdd' => 'jonas', 'dxa' => '1998'];
-//        $data['title'] = 'john';
-//        $data['value'] = '1999-09-09';
+        $request->request->set('name', 'martin');
+        $data = ['name_7' => 'tom', 'date_8' => '2225'];
+
         $request->request->set('fields', $data);
 
         $response = $this->forward('AppBundle\Controller\SubscriberController::putAction', array(
@@ -34,7 +45,6 @@ class SubscriberController extends Controller
             'id' => 2,
         ));
         return $response;
-        die();
     }
 
     public function postAction(Request $request)
@@ -122,33 +132,46 @@ class SubscriberController extends Controller
         if (isset($parameters['fields'])) {
             $fields = [];
             foreach ($parameters['fields'] as $key => $value) {
-                if (is_string($key) & is_string($value)) {
+                if (is_string($key) && is_string($value)) {
                     $field['title'] = $key;
                     $field['value'] = $value;
                     $fields[] = $field;
                 }
             }
             unset($parameters['fields']);
-            $parameters['fields'] = $fields;
         }
-
 
         $form = $this->createForm(Form\SubscriberType::class, $subscriber, ['method' => $method]);
-
         $form->submit($parameters, 'PUT' !== $method);
-
         if ($form->isValid()) {
-            $subscriber = $form->getData();
             $em = $this->getDoctrine()->getManager();
-            $em->persist($subscriber);
-            $em->flush();
-        }
+            foreach ($fields as $fieldData) {   //check if each additional field exists or need to create a new one
+                $criteria = Criteria::create()->where(Criteria::expr()->eq("title", $fieldData['title']));
+                if ($subscriber->getFields()->matching($criteria)->isEmpty()) {      //doesn't exists so we create a new one
+                    $fieldEntity = new Entity\Field();
+                    $fieldEntity->setSubscriber($subscriber);
+                } else {
+                    $fieldEntity = $subscriber->getFields()->matching($criteria)[0];
+                }
+                $fieldForm = $this->createForm(Form\FieldType::class, $fieldEntity, ['method' => $method]);
+                $fieldForm->submit($fieldData, 'PUT' !== $method);
 
-        throw new BadRequestException($this->getErrorMessages($form));
+                if ($fieldForm->isValid()) {
+                    $fieldEntity = $fieldForm->getData();
+                    $em->persist($fieldEntity);
+                } else {
+                    throw new BadRequestException($this->getErrorMessages($fieldForm));
+                }
+            }
+            $em->flush();
+        } else {
+            throw new BadRequestException($this->getErrorMessages($form));
+        }
     }
 
 
-    private function getErrorMessages(\Symfony\Component\Form\Form $form) {
+    private function getErrorMessages(\Symfony\Component\Form\Form $form)
+    {
         $errors = [];
 
         foreach ($form->getErrors() as $key => $error) {

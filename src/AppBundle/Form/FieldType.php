@@ -27,7 +27,7 @@ class FieldType extends AbstractType
         $resolver->setDefaults(
             [
                 'data_class' => Entity\Field::class,
-                'csrf_protection' => true,
+                'csrf_protection' => false,
                 'allow_extra_fields' => true,
             ]
         );

@@ -68,6 +68,7 @@ class Subscriber extends AbstractEntity
     /**
      * @var Collection|fields[]
      * @ORM\OneToMany(targetEntity="Field", mappedBy="subscriber", cascade={"persist"})
+
      */
     protected $fields;
 

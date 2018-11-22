@@ -13,8 +13,8 @@ class SubscriberFixtures extends Fixture
         // create 20 subscribers! Bam!
         for ($i = 0; $i < 20; $i++) {
             $subscriber = new Entity\Subscriber();
-            $subscriber->setEmail(substr(md5(microtime()),rand(0,26),5) . '@' . substr(md5(microtime()),rand(0,26),5) . '.' . substr(md5(microtime()),rand(0,26),5));
-            $subscriber->setName(substr(md5(microtime()),rand(0,26),5));
+            $subscriber->setEmail('test' . $i .'@test.com');
+            $subscriber->setName('test');
             $subscriber->setState(Entity\Subscriber::$statusList[rand ( 0, count(Entity\Subscriber::$statusList) - 1 )]);
             $manager->persist($subscriber);
 
@@ -26,29 +26,25 @@ class SubscriberFixtures extends Fixture
 
     function addRandomFieldToSubscriber(Entity\Subscriber $subscriber, ObjectManager $manager)
     {
-        $field = new Entity\Field();
+        $field = new Entity\Field($subscriber);
 
         $type = Entity\Field::$typeList[rand(0, count(Entity\Field::$typeList) - 1)];
-        $field->setType($type);
         $field->setSubscriber($subscriber);
-        $field->setTitle(substr(md5(microtime()), rand(0, 26), 15));
+        $field->setTitle('testTitle');
 
         switch ($type) {
             case Entity\Field::TYPE_DATE:
-                $timestamp = mt_rand(1, time());
-                $randomDate = date("Y-m-d H:i:s", $timestamp);
-                $field->setValue($randomDate);
+                $data = date("Y-m-d H:i:s");
+                $field->setValue($data);
                 break;
             case Entity\Field::TYPE_NUMBER:
-                $randomNumber = rand();
-                $field->setValue($randomNumber);
+                $field->setValue(5);
                 break;
             case Entity\Field::TYPE_STRING:
-                $randomString = substr(md5(microtime()), rand(0, 26), 15);
-                $field->setValue($randomString);
+                $field->setValue('TestValue');
                 break;
             case Entity\Field::TYPE_BOOLEAN:
-                $field->setValue(rand(0, 1));
+                $field->setValue(1);
                 break;
         }
 

@@ -5,6 +5,8 @@ namespace AppBundle\EventListener;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use AppBundle\Exception\ApiExceptionInterface;
 use AppBundle\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ExceptionListener
 {
@@ -33,7 +35,7 @@ class ExceptionListener
 
             $event->setResponse($response);
         } else {
-            throw new BadRequestException(['page or method not found']);
+            throw new BadRequestException(['page or method not found'], Response::HTTP_NOT_FOUND);
         }
     }
 

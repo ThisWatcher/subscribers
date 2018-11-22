@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
@@ -16,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * options={"collate"="utf8_lithuanian_ci"})
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ * @UniqueEntity("email")
  */
 class Subscriber extends AbstractEntity
 {
@@ -36,14 +38,6 @@ class Subscriber extends AbstractEntity
         self::STATUS_UNSUBSCRIBED,
         self::STATUS_BOUNCED,
     );
-
-    /**
-     * @JMS\Expose();
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
 
     /**
      * @var string

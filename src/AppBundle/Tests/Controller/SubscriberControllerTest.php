@@ -2,30 +2,54 @@
 
 namespace AppBundle\Tests\Controller;
 
-use PHPUnit\Framework\TestCase;
+use AppBundle\Tests\ApiTestCase;
 
-class SubscriberControllerTest extends TestCase
+class SubscriberControllerTest extends ApiTestCase
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->createSubscriber();
+    }
+
     public function testPOST()
     {
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://myproject.local',
-            'http_errors' => false,
-        ]);
         $data = array(
-            'email' => 'test@test.com',
+            'email' => 'foobar@foobar.com',
             'name' => 'test',
             'state' => 'state',
             'fields' => [
                 'test' => 'test'
             ]
         );
-        $response = $client->post('/subscriber', [
+
+        $response = $this->client->post('app_test.php/subscriber', [
             'body' => json_encode($data)
         ]);
-        //var_dump($response->getBody(true));
+
+
+
         $this->assertEquals(200, $response->getStatusCode());
         $finishedData = json_decode($response->getBody(true), true);
         $this->assertArrayHasKey('status', $finishedData);
+
+        $this->assertArrayHasKey('data', $finishedData);
+        $this->assertEquals('foobar@foobar.com', $finishedData['data']['email']);
+        $this->assertEquals('test', $finishedData['data']['name']);
+        $this->assertEquals('test', $finishedData['data']['fields']['test']);
+    }
+
+    public function testGET()
+    {
+        $response = $this->client->get('app_test.php/subscriber/test@test.com');
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $finishedData = json_decode($response->getBody(true), true);
+        $this->assertEquals(array(
+            'email',
+            'name',
+            'state',
+        ), array_keys($finishedData['data']));
     }
 }

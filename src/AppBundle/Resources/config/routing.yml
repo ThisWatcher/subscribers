@@ -8,17 +8,17 @@ subscriber_post:
     methods:    [POST]
 
 subscriber_get:
-    path:     /subscriber/{id}
+    path:     /subscriber/{email}
     defaults: { _controller: AppBundle:Subscriber:get }
     methods:    [GET]
 
 subscriber_put:
-    path:     /subscriber/{id}
+    path:     /subscriber/{email}
     defaults: { _controller: AppBundle:Subscriber:put }
     methods:    [PUT]
 
 subscriber_delete:
-    path:     /subscriber/{id}
+    path:     /subscriber/{email}
     defaults: { _controller: AppBundle:Subscriber:delete }
     methods:    [DELETE]
 

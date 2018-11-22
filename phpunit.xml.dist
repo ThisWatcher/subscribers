@@ -28,4 +28,8 @@
             </exclude>
         </whitelist>
     </filter>
+
+    <php>
+        <env name="TEST_BASE_URL" value="http://localhost" />
+    </php>
 </phpunit>

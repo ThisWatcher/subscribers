@@ -41,3 +41,10 @@ services:
        class: AppBundle\EventListener\ApiExceptionListener
        tags:
            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    subcriber.listener.exception:
+       class: AppBundle\EventListener\ExceptionListener
+       tags:
+           - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+       calls:
+            - [ setServiceContainer, ["@service_container"]]

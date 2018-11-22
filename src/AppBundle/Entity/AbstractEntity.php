@@ -11,6 +11,7 @@ abstract class AbstractEntity
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Exclude();
      */
     protected $id;
 

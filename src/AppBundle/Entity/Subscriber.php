@@ -38,6 +38,14 @@ class Subscriber extends AbstractEntity
     );
 
     /**
+     * @JMS\Expose();
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @var string
      * @ORM\Column(name="email", type="string", length=255)
      * @Assert\Email(
@@ -68,7 +76,7 @@ class Subscriber extends AbstractEntity
     /**
      * @var Collection|fields[]
      * @ORM\OneToMany(targetEntity="Field", mappedBy="subscriber", cascade={"persist"})
-
+     * @JMS\Exclude();
      */
     protected $fields;
 
@@ -136,7 +144,6 @@ class Subscriber extends AbstractEntity
         return $this;
     }
 
-
     /**
      * @return Collection|fields[]|ArrayCollection
      */
@@ -151,8 +158,8 @@ class Subscriber extends AbstractEntity
      */
     public function addField(Field $field)
     {
-        $this->getFields()->add($field);
         $field->setSubscriber($this);
+        $this->getFields()->add($field);
         return $this;
     }
 
@@ -162,4 +169,19 @@ class Subscriber extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("fields")
+     */
+    public function getSomeField()
+    {
+        $fields = $this->getFields();
+        if (!$fields->isEmpty()) {
+            foreach ($fields as $field) {
+                $fieldsArray[$field->getTitle()] = $field->getValue();
+            }
+            return $fieldsArray;
+        }
+        return null;
+    }
 }

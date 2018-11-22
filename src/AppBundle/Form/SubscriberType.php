@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use Doctrine\Common\Collections\Criteria;
 
 class SubscriberType extends AbstractType
 {
@@ -22,9 +25,8 @@ class SubscriberType extends AbstractType
             ->add('fields', CollectionType::class, [
             'entry_type' => FieldType::class,
             'by_reference' => false,
-           // 'entry_options' => array('label' => false),
-            'allow_add' => true,]
-            );
+            'entry_options' => array('label' => false),
+            'allow_add' => true,]);
     }
 
     /**

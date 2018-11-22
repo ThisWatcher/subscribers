@@ -61,12 +61,9 @@ class Field extends AbstractEntity
         return (string) $this->getType() . ' - ' . $this->getValue();
     }
 
-    public function __clone()
+    public function __construct(Subscriber $subscriber)
     {
-        $this->id = null;
-        $this->createdAt = null;
-        $this->updatedAt = null;
-        $this->type = null;
+        $this->subscriber = $subscriber;
     }
 
     /**

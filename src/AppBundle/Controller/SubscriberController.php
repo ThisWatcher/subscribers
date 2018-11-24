@@ -65,17 +65,17 @@ class SubscriberController extends Controller
             ]
         );
 
-        //$response = $client->get('/subscriber/test0@test.com');
+      //  $response = $client->delete('/subscriber/test@test.com');
 //        $response = $client->post('/subscriber', [
 //            'body' => json_encode($data)
 //        ]);
 //        dump($client);
 //        dump($data);
 //        dump($response->getBody()->getContents());
-//        die();
+  //      die();
 
         $request = new Request();
-        $request->setMethod($request::METHOD_POST);
+        $request->setMethod($request::METHOD_DELETE);
 
         $data = array(
             'email' => 'tesfafas3fda241@waxw.com',
@@ -95,9 +95,9 @@ class SubscriberController extends Controller
 //
         $request->request->set('data',json_encode($data));
 
-        $response = $this->forward('AppBundle\Controller\SubscriberController::postAction', array(
+        $response = $this->forward('AppBundle\Controller\SubscriberController::deleteAction', array(
             'request' => $request,
-            'email' => 56,
+            'email' => 'foobar@foobar.com',
         ));
         return $response;
     }
@@ -151,14 +151,15 @@ class SubscriberController extends Controller
         }
 
         $data = json_decode($request->getContent(), true);
-        $this->processForm($subscriber, $data, 'PUT');
+        $subscriber = $this->processForm($subscriber, $data, 'PUT');
 
         $serializer = $this->container->get('serializer');
         $data = $serializer->serialize([
             'status' => 'success',
             'code' => JsonResponse::HTTP_OK,
-            'message' => 'user updated succesfully'
+            'data' => $subscriber
         ], 'json');
+
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
@@ -179,8 +180,8 @@ class SubscriberController extends Controller
         $data = $serializer->serialize([
             'status' => 'success',
             'code' => JsonResponse::HTTP_OK,
-            'message' => 'user deleted succesfully'
-        ]);
+            'message' => 'user ' . $email . ' deleted succesfully'
+        ], 'json');
 
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }

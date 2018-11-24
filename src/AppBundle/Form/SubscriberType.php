@@ -7,9 +7,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
-use Doctrine\Common\Collections\Criteria;
 
 class SubscriberType extends AbstractType
 {
@@ -19,7 +16,9 @@ class SubscriberType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'disabled' => $options['is_edit']
+            ])
             ->add('email')
             ->add('state')
             ->add('fields', CollectionType::class, [
@@ -38,6 +37,7 @@ class SubscriberType extends AbstractType
                 'data_class' => Entity\Subscriber::class,
                 'csrf_protection' => false,
                 'allow_extra_fields' => true,
+                'is_edit' => false,
             ]
         );
     }
@@ -45,7 +45,8 @@ class SubscriberType extends AbstractType
     /**
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return 'subscriber_type';
     }
 }

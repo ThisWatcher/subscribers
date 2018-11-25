@@ -2,115 +2,24 @@
 
 namespace AppBundle\Controller;
 
-use Composer\Json\JsonValidationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity;
 use AppBundle\Form;
-use AppBundle\Exception;
 use AppBundle\Exception\BadRequestException;
 use AppBundle\Exception\NotFoundException;
 use Doctrine\Common\Collections\Criteria;
 
 class SubscriberController extends Controller
 {
-    public function testAction(Request $request)
-    {
-
-//veikia
-//        $client = new \GuzzleHttp\Client([
-//            'base_uri' => 'http://localhost',
-//            'http_errors' => false,
-//        ]);
-//        $data = array(
-//            'nickname' => 'xd',
-//            'avatarNumber' => 5,
-//            'tagLine' => 'a test dev!'
-//        );
-//
-//        // 1) Create a programmer resource
-//        $response = $client->get('/subscriber/test@test.com', [
-//            'body' => json_encode($data)
-//        ]);
-//        dump($response->getBody()->getContents());
-//        die();
-
-
-
-
-
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => 'http://localhost',
-            'http_errors' => false,
-        ]);
-
-//        $data = array(
-//            'email' => 'foo@bar.com',
-//            'name' => 'test',
-//            'fields' => [
-//                'test' => 'test'
-//            ]
-//        );
-
-        $data = array(
-            'email' => 'ffffaaa@gmail.com',
-            'name' => 'name',
-            'state' => 'state',
-            'fields' => [
-                '21' => 'aaaaaaaa',
-                '224' => 'aaaaaaaaaaaa'
-            ]
-        );
-
-      //  $response = $client->delete('/subscriber/test@test.com');
-//        $response = $client->post('/subscriber', [
-//            'body' => json_encode($data)
-//        ]);
-//        dump($client);
-//        dump($data);
-//        dump($response->getBody()->getContents());
-  //      die();
-
-        $request = new Request();
-        $request->setMethod($request::METHOD_DELETE);
-
-        $data = array(
-            'email' => 'tesfafas3fda241@waxw.com',
-            'name' => 'name',
-            'state' => 'state',
-            'fields' => [
-                '21' => 'aaaaaaaa',
-                '224' => 'aaaaaaaaaaaa'
-            ]
-        );
-
-
-
-
-
-
-//
-        $request->request->set('data',json_encode($data));
-
-        $response = $this->forward('AppBundle\Controller\SubscriberController::deleteAction', array(
-            'request' => $request,
-            'email' => 'foobar@foobar.com',
-        ));
-        return $response;
-    }
-
     public function postAction(Request $request)
     {
         $subscriber = new Entity\Subscriber();
 
         $data = json_decode($request->getContent(), true);
 
-      //  $data = json_decode($request->request->get('data'), true);
-//dump($subscriber);die();
-        $subscriber = $this->processForm($subscriber, $data, 'POST');
+        $subscriber = $this->processSubscriber($subscriber, $data, 'POST');
 
         $serializer = $this->container->get('serializer');
         $data = $serializer->serialize([
@@ -151,7 +60,8 @@ class SubscriberController extends Controller
         }
 
         $data = json_decode($request->getContent(), true);
-        $subscriber = $this->processForm($subscriber, $data, 'PUT');
+
+        $subscriber = $this->processSubscriber($subscriber, $data, 'PUT');
 
         $serializer = $this->container->get('serializer');
         $data = $serializer->serialize([
@@ -186,42 +96,41 @@ class SubscriberController extends Controller
         return new JsonResponse($data, JsonResponse::HTTP_OK, [], true);
     }
 
-    private function processForm(Entity\Subscriber $subscriber, array $parameters, $method = 'PUT')
+    private function processSubscriber(Entity\Subscriber $subscriber, array $parameters, $method = 'PUT')
     {
-        if (isset($parameters['fields'])) {
-            $fields = $parameters['fields'];
-            unset($parameters['fields']);
-        }
+        $isEdit = $method == 'PUT' ? true : false;
 
-        $subscriberForm = $this->createForm(Form\SubscriberType::class, $subscriber, ['method' => $method]);
-        $subscriberForm->submit($parameters, 'PUT' !== $method);
+        $subscriberForm = $this->createForm(Form\SubscriberType::class, $subscriber, ['method' => $method, 'is_edit' => $isEdit]);
+        $subscriberForm->submit($parameters, false);
 
         if ($subscriberForm->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $subscriber = $subscriberForm->getData();
             $em->persist($subscriber);
             $em->flush();
-
-            foreach ($fields as $key => $value) {//check if each additional field exists or need to create a new one
-                if (is_string((string) $key) && is_string((string) $value)) {
-                    $criteria = Criteria::create()->where(Criteria::expr()->eq("title", $key));
-                    if ($subscriber->getFields()->matching($criteria)->isEmpty()) {      //doesn't exists so we create a new one
-                        $field = new Entity\Field($subscriber);
-                    } else {
-                        $field = $subscriber->getFields()->matching($criteria)[0];
-                    }
-                    $fieldForm = $this->createForm(Form\FieldType::class, $field, ['method' => $method]);
-                    $fieldForm->submit(['title' => $key, 'value' => $value], false);
-                    if ($fieldForm->isValid()) {
-                        $field = $fieldForm->getData();
-                        $em->persist($field);
-                        $em->flush();
-                    } else {
-                        throw new BadRequestException($this->getErrorMessages($fieldForm));
+            if(!empty($parameters['fields'])) {
+                foreach ($parameters['fields'] as $key => $value) {//check if each additional field exists or need to create a new one
+                    if (is_string((string) $key) && is_string((string) $value)) {
+                        $criteria = Criteria::create()->where(Criteria::expr()->eq("title", $key));
+                        if ($subscriber->getFields()->matching($criteria)->isEmpty()) {      //doesn't exists so we create a new one
+                            $field = new Entity\Field($subscriber);
+                        } else {
+                            $field = $subscriber->getFields()->matching($criteria)[0];
+                        }
+                        $fieldForm = $this->createForm(Form\FieldType::class, $field, ['method' => $method]);
+                        $fieldForm->submit(['title' => $key, 'value' => $value], false);
+                        if ($fieldForm->isValid()) {
+                            $field = $fieldForm->getData();
+                            $em->persist($field);
+                            $em->flush();
+                        } else {
+                            throw new BadRequestException($this->getErrorMessages($fieldForm));
+                        }
                     }
                 }
             }
             $em->refresh($subscriber);
+
             return $subscriber;
         } else {
             throw new BadRequestException($this->getErrorMessages($subscriberForm));

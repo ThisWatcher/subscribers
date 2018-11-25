@@ -18,6 +18,4 @@
 /composer.phar
 /composer.lock
 /.idea/
-cli.php
-newfile.txt
-testing.php
+/composer.lock

@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use AppBundle\Entity;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SubscriberType extends AbstractType
 {
@@ -16,16 +16,12 @@ class SubscriberType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name', null, [
+            ->add('name')
+            ->add('email', null, [
                 'disabled' => $options['is_edit']
             ])
-            ->add('email')
-            ->add('state')
-            ->add('fields', CollectionType::class, [
-            'entry_type' => FieldType::class,
-            'by_reference' => false,
-            'entry_options' => array('label' => false),
-            'allow_add' => true,]);
+            ->add('state', ChoiceType::class, [
+                'choices' => Entity\Subscriber::$statusList]);
     }
 
     /**

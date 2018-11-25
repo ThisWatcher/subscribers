@@ -18,6 +18,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  * @UniqueEntity("email")
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="The email '{{ value }}' has already been registered"
+ * )
  */
 class Subscriber extends AbstractEntity
 {

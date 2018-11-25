@@ -15,14 +15,13 @@ class SubscriberControllerTest extends ApiTestCase
 
     public function testPOST()
     {
-        $data = array(
+        $data = [
             'email' => 'foobar@foobar.com',
             'name' => 'test',
-            'state' => 'state',
             'fields' => [
                 'test' => 'test'
             ]
-        );
+        ];
 
         $response = $this->client->post('app_test.php/subscriber', [
             'body' => json_encode($data)
@@ -43,21 +42,19 @@ class SubscriberControllerTest extends ApiTestCase
 
         $this->assertEquals(200, $response->getStatusCode());
         $finishedData = json_decode($response->getBody(true), true);
-        $this->assertEquals(array(
+        $this->assertEquals([
             'email',
             'name',
             'state',
-        ), array_keys($finishedData['data']));
+        ], array_keys($finishedData['data']));
     }
 
     public function testPUT()
     {
-        $data = array(
+        $data = [
             'name' => 'test2',
-            'fields' => [
-                'test' => 'test2'
-            ]
-        );
+            'fields' => ['test' => 'test2']
+        ];
 
         $response = $this->client->put('app_test.php/subscriber/test@test.com', [
             'body' => json_encode($data)

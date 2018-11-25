@@ -1,7 +1,3 @@
-subscriber_index:
-    path:     /
-    defaults: { _controller: AppBundle:Default:index }
-
 subscriber_post:
     path:     /subscriber
     defaults: { _controller: AppBundle:Subscriber:post }
@@ -21,9 +17,3 @@ subscriber_delete:
     path:     /subscriber/{email}
     defaults: { _controller: AppBundle:Subscriber:delete }
     methods:    [DELETE]
-
-
-
-subscriber_test:
-    path:     /test
-    defaults: { _controller: AppBundle:Subscriber:test }

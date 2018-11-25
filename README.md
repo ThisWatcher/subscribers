@@ -30,6 +30,14 @@ for Apache go to "\apache\conf\extra\httpd-vhosts.conf" file and add this virtua
 ```
 7) Configure parameters.yml file located in app/config (currently only database information is required)
   use parameters.yml.dist as example.
+```
+parameters:
+    ...
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: symfony
+    database_user: root
+```
   
 8) Create 2 databases 1 for production environment and 1 for testing. launch these 2 commands
 ```

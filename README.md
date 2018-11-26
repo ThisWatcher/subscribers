@@ -57,3 +57,37 @@ php bin/console doctrine:fixtures:load
 ```
 phpunit src/AppBundle/Tests/Controller/SubscriberControllerTest.php
 ```
+
+
+Available paths:
+```
+to post: /subscriber , method POST
+to get: /subscriber/{email} , method GET
+to update: /subscriber/{email} , method PUT
+to delete: /subscriber/{email}, method DELETE
+```
+Request data should look like this:
+```
+['email': "example@example.com",
+'name': "example",
+'state': "ACTIVE",
+'fields': [
+	'example': 'example'
+	]
+]
+```
+Response data looks like this:
+```
+['status': "success"
+'code': 200
+'data':['email': "example@example.com",
+	'name': "example",
+	'state': "ACTIVE",
+	'fields': [
+		'example': 'example'
+		]
+	] 
+]
+
+```
+

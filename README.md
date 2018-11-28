@@ -78,16 +78,16 @@ Request data should look like this:
 ```
 Response data looks like this:
 ```
-['status': "success"
+{'status': "success"
 'code': 200
-'data':['email': "example@example.com",
+'data':{'email': "example@example.com",
 	'name': "example",
 	'state': "ACTIVE",
-	'fields': [
+	'fields': {
 		'example': 'example'
-		]
-	] 
-]
+		}
+	}
+}
 
 ```
 
